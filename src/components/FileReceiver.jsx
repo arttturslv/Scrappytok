@@ -1,16 +1,26 @@
-
-export default function FileReceiver({file, setFile, setProgress}) {
-    async function FileUploader (fileTarget) {        
+import { Link } from "react-router-dom";
+export default function FileReceiver({file, setFile}) {
+    
+    function FileUploader (fileTarget) {   
+        if(!fileTarget) {
+          console.error("File undefined")
+          return;
+        }
+      
         const fr = new FileReader();
 
         fr.readAsText(fileTarget);
 
-        fr.addEventListener('load', () => {
-            setFile(JSON.parse(fr.result));
-            console.log(JSON.parse(fr.result).Activity["Favorite Videos"].FavoriteVideoList)
-            console.log(JSON.parse(fr.result))
-
-        })
+        fr.onload = () => {
+          const parsedData = JSON.parse(fr.result);
+          setFile(parsedData);
+          console.log(parsedData.Activity["Favorite Videos"].FavoriteVideoList);
+          console.log(parsedData);
+        };
+      
+        fr.onerror = () => {
+          console.error("Error reading file");
+        };
     }
 
 
@@ -37,10 +47,10 @@ export default function FileReceiver({file, setFile, setProgress}) {
             </label>
             <input onChange={(e)=> FileUploader(e.target.files[0])} className='hidden' type="file" id="avatar" name="avatar" accept="*" />
             </div>
-            <div onClick={()=> setProgress(1)} className='w-[100%] h-[100%] gap-4 max-h-72 max-w-96 border-yellow-500 flex justify-center items-center border-4 rounded-xl'>
+            <Link to={'/options'} className='w-[100%] h-[100%] gap-4 max-h-72 max-w-96 border-yellow-500 flex justify-center items-center border-4 rounded-xl'>
               <h3 className='font-black text-2xl '>Continuar</h3>
               <img width={"8%"} className=" -rotate-90" src="../src/assets/arrow-icon.svg" alt="" srcSet="" />
-            </div>
+            </Link>
         </div>
       </div>
 

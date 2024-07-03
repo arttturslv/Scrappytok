@@ -1,8 +1,8 @@
+import Header from '../components/Header';
+import FileReceiver from '../components/FileReceiver';
+import { useState, useEffect } from 'react'
 
-import { useState, useRef, useEffect } from 'react'
-
-export default function Home({file, setFile, setProgress}) {
-  const [file, setFile] = useState(null);
+export default function Home() {
   const [favEffects, setFavEffects] = useState(null);
   const [favSounds, setFavSounds] = useState(null);
   const [favVideos, setFavVideos] = useState(null);
@@ -10,29 +10,31 @@ export default function Home({file, setFile, setProgress}) {
   const [followerList, setFollowerList] = useState(null);
   const [likedList, setLikedList] = useState(null);
 
-  const [progress, setProgress] = useState(0);
+  const [file, setFile] = useState(null);
 
   useEffect(()=> {
     if(file!=null) {
-      setFavEffects(file.Activity["Favorite Effects"].FavoriteEffectsList)
-      setFavSounds(file.Activity["Favorite Sounds"].FavoriteSoundList)
-      setFavVideos(file.Activity["Favorite Videos"].FavoriteVideoList)
-      setFollowingList(file.Activity["Following List"].Following)
-      setFollowerList(file.Activity["Follower List"].FansList)
-      setLikedList(file.Activity["Like List"].ItemFavoriteList)
+      window.localStorage.setItem("file", JSON.stringify(file));
     }
-  }, file)
-
+  }, [file])
 
     return (
       <div className='h-screen flex justify-center items-center mb-36'>
       <div className='w-full max-w-[1440px]'>
         <div className='absolute top-0'>
           <Header></Header>
+          <FileReceiver file={file} setFile={setFile} ></FileReceiver>
+        </div>
+      </div>
+    </div>
+    )
+}
 
-          {
+/*
+
+     {
             progress == 0 ?
-              <FileReceiver file={file} setFile={setFile} setProgress={setProgress}></FileReceiver>
+              <FileReceiver file={file} setFile={setFile} ></FileReceiver>
               :
               <div className='flex flex-wrap justify-center'>
               <div className='flex flex-wrap justify-evenly space-y-2 w-[90%]'>
@@ -48,10 +50,4 @@ export default function Home({file, setFile, setProgress}) {
             </div>
           }
 
-        </div>
-
-      </div>
-    </div>
-
-    )
-}
+*/
