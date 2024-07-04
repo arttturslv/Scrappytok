@@ -7,6 +7,8 @@ export default function Element({ link, date, focus, i, filterNet }) {
         return date.replaceAll('-', '/').substring(0, 10);
     }
 
+    console.log(link)
+
     return (
         <div
 

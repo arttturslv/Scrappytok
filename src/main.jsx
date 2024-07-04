@@ -3,7 +3,9 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 import Home from './pages/Home'
 import Options from './pages/Options'
-import View from './pages/View'
+import ViewVideos from './pages/ViewVideos'
+import ViewPeople from './pages/ViewPeople'
+
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
 const router = createBrowserRouter([
@@ -16,8 +18,12 @@ const router = createBrowserRouter([
     element: <Options/>
   },
   {
-    path: "/options/:id",
-    element: <View/>
+    path: "/options/videos/:id",
+    element: <ViewVideos/>
+  },
+  {
+    path: "/options/people/:id",
+    element: <ViewPeople/>
   },
 ])
 

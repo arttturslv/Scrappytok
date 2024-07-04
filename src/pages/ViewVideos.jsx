@@ -3,12 +3,13 @@ import Header from "../components/Header";
 import { useParams } from "react-router-dom";
 import Element from "../components/Element";
 
-export default function View() {
+export default function ViewVideos() {
     const [file, setFile] = useState('');
     const [focus, setFocus] = useState(null);
     const [filterNet, setFilterNet] = useState('normal');
 
     const {id} = useParams();
+    var customLink;
 
     useEffect(()=> {
         const temp = (JSON.parse(window.localStorage.getItem("file"))).Activity[id];
@@ -19,10 +20,6 @@ export default function View() {
     useEffect(()=> {
         console.log(file);
     }, [file])
-
-    function onFocus() {
-        setFocus(i);
-    }
 
     return (
         <div className="flex mx-32 gap-8 md:flex-row items-center justify-center flex-wrap">
@@ -37,11 +34,18 @@ export default function View() {
 
         <div className="flex flex-wrap transition-all duration-500 w-fit justify-center">
             {
-                file.length>0 && file.map((item, i) => (
+                file.length>0 && file.map((item, i) => {
+                    if(id=='Favorite Effects') {
+                        customLink = item.EffectLink;
+                    } else {
+                        customLink = item.Link;
+                    }
+
+                   return (
                     <div className="m-0 p-0" key={i} onClick={()=> setFocus(i)}>
-                        <Element i={i} filterNet={filterNet} focus={focus} link={item.Link} date={item.Date}></Element>
+                        <Element i={i} filterNet={filterNet} focus={focus} link={customLink} date={item.Date}></Element>
                     </div>
-                ))
+                )})
             }
         </div>
      
