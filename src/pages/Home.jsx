@@ -19,35 +19,11 @@ export default function Home() {
   }, [file])
 
     return (
-      <div className='h-screen flex justify-center items-center mb-36'>
-      <div className='w-full max-w-[1440px]'>
-        <div className='absolute top-0'>
-          <Header></Header>
+      <div className='h-screen flex flex-col mb-36 items-center'>
+        <Header></Header>
+        <div className='w-full bg-[#fff] max-w-[1440px]'>
           <FileReceiver file={file} setFile={setFile} ></FileReceiver>
         </div>
-      </div>
     </div>
     )
 }
-
-/*
-
-     {
-            progress == 0 ?
-              <FileReceiver file={file} setFile={setFile} ></FileReceiver>
-              :
-              <div className='flex flex-wrap justify-center'>
-              <div className='flex flex-wrap justify-evenly space-y-2 w-[90%]'>
-
-                {
-                  (favVideos).map((item, i) => (
-                    <div className='w-32 h-48 bg-slate-600' onClick={() => window.open(`${item.Link}`, 'blank')} key={i}>
-                      <p className='text-yellow-400'>{item.Date}</p>
-                    </div>
-                  ))
-                }
-              </div>          
-            </div>
-          }
-
-*/
