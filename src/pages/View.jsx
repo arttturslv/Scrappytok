@@ -170,25 +170,29 @@ function renderElements(files, dispatch, id, lastInteraction, setLastInteraction
 
 function renderAll(files, dispatch, id, lastInteraction, setLastInteraction, preference) {
     var filtered = files;
-    if(!preference) {
-        filtered = filtered.filter((el) => {
-            return preference.favorite.some((fav) => {
-                return fav.Date != el.Date;
-            })
-        })
 
+    if (preference.favorite.length != 0) {
         filtered = filtered.filter((el) => {
-            return preference.deleted.some((fav) => {
-                return fav.Date != el.Date;
-            })
-        })
+            return !preference.favorite.some((fav) => {
+                return fav.Link === el.Link;
+            });
+        });
     }
-     
+
+    if (preference.delete.length != 0) {
+        filtered = filtered.filter((el) => {
+            return !preference.delete.some((del) => {
+                return del.Link === el.Link;
+            });
+        });
+    }
+
     return filtered.map((item, index) => {
         return (
-            <div onClick={()=> setLastInteraction(index)} className="m-0 p-0" key={index}>
-                <Element lastInteraction={{fn:lastInteraction, index: index}} type={id} dispatch={dispatch} item={item}></Element>
+            <div onClick={() => setLastInteraction(index)} className="m-0 p-0" key={index}>
+                <Element lastInteraction={{ fn: lastInteraction, index: index }} type={id} dispatch={dispatch} item={item} />
             </div>
-        )
-    })
+        );
+    });
 }
+
