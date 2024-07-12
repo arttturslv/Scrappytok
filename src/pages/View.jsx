@@ -37,7 +37,10 @@ export default function View() {
 
 
     useEffect(() => {
-        localStorage.setItem(id, JSON.stringify(preference));
+        var ScrappyTok = JSON.parse(localStorage.getItem("ScrappyTok"));
+        ScrappyTok[id] = preference;
+        console.log(ScrappyTok)
+        localStorage.setItem('ScrappyTok', JSON.stringify(ScrappyTok));
     }, [preference]);
 
     function reducer(state, action) {

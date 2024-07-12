@@ -23,7 +23,8 @@ export default function Element({type, dispatch, item}) {
                     <div className="flex-grow flex bg-inherit items-center" onClick={() => window.open(link, 'blank')}>
                         <h3 className="bg-inherit text-[#FAFFD8] text-xl">@{item.UserName?.substring(0, 16)}</h3>
                     </div>
-                    <p className="w-10 h-full  bg-yellow-200 justify-center items-center flex" onClick={() => dispatch({ type: ACTIONS.FAVORITE, payload: { data: { "UserName": username, "Link": link } } })}>⭐</p>
+                    
+                    <p className="w-10 h-full bg-yellow-200 justify-center items-center flex" onClick={() => dispatch({ type: ACTIONS.FAVORITE, payload: { data: { "UserName": item.UserName, "Link": link } } })}>⭐</p>
                 </div>
             </div>
         )

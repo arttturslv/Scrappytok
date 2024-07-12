@@ -11,13 +11,7 @@ export default function Home() {
   const [likedList, setLikedList] = useState(null);
 
   const [file, setFile] = useState(null);
-
-  useEffect(()=> {
-    if(file!=null) {
-      window.localStorage.setItem("file", JSON.stringify(file));
-    }
-  }, [file])
-
+  
     return (
       <div className='h-screen w-full max-w-[1440px] m-auto flex flex-col justify-center items-center'>
         <Header/>

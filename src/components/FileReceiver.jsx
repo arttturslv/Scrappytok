@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { clearData } from "../Hooks/useTikTokData";
 export default function FileReceiver({file, setFile}) {
     const [existingFile, setExistingFile] = useState(null);
 
@@ -9,17 +10,17 @@ export default function FileReceiver({file, setFile}) {
           return;
         }
 
-        console.log(fileTarget.name);
+        if(file) {
+          clearData('ScrappyTok');
+        } 
 
         const fr = new FileReader();
-
         fr.readAsText(fileTarget);
 
         fr.onload = () => {
           const parsedData = JSON.parse(fr.result);
           setFile(parsedData.Activity);
           localStorage.setItem('ScrappyTok', JSON.stringify({data: parsedData.Activity, name: fileTarget.name}));
-          console.log(parsedData);
         };
       
         fr.onerror = () => {
@@ -30,7 +31,6 @@ export default function FileReceiver({file, setFile}) {
     useEffect(() => {
       const localFile = localStorage.getItem('ScrappyTok');
       if(localFile!=null) {
-        console.log(JSON.parse(localFile))
         console.log('Já tem um arquivo salvo.')
         setFile(JSON.parse(localFile));
       } 
@@ -47,7 +47,7 @@ export default function FileReceiver({file, setFile}) {
             <div className=''>
               <label htmlFor="avatar" className='cursor-pointer w-max flex-col flex items-center px-4 '>
                 {
-                  file==null?
+                  !file?
                       <img className="md:w-[100%] w-[80%] "  src="../src/assets/file-question-icon.svg" alt="" />
                   :
                     <>

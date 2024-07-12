@@ -10,6 +10,11 @@ export function useLocalStorageFile(fileName) {
         return JSONFile;
 }
 
+export function clearData(fileName) {
+    console.log("limpando ->", fileName)
+    localStorage.removeItem(fileName)
+}
+
 /**
  * Receives a obj an return the first value.
  * -> To add: verify if is an array
