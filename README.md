@@ -1,8 +1,11 @@
-# React + Vite
+# ScrappyTok
+![scrappytok](https://github.com/arttturslv/Scrappytok/assets/115251355/196aa266-a990-4975-a903-9b167c0184a1)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+<h3>Status: </h3> 
+<img width="110px" src="https://i.imgur.com/yUlXqQK.png">
 
-Currently, two official plugins are available:
+## Sobre o Projeto
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+ScrappyTok é uma ferramenta online que visa melhorar a exibição das informações baixadas de uma conta do tiktok.
+O site recebe um arquivo JSON, que é lido e armazenado no localstorage e então o usuario pode navegar pelos videos curtidos, videos, efeitos e musicas salvas, os followers e following. 
+

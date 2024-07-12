@@ -19,11 +19,9 @@ export default function Home() {
   }, [file])
 
     return (
-      <div className='h-screen flex flex-col mb-36 items-center'>
-        <Header></Header>
-        <div className='w-full bg-[#fff] max-w-[1440px]'>
-          <FileReceiver file={file} setFile={setFile} ></FileReceiver>
-        </div>
+      <div className='h-screen w-full max-w-[1440px] m-auto flex flex-col justify-center items-center'>
+        <Header/>
+        <FileReceiver file={file} setFile={setFile} ></FileReceiver>
     </div>
     )
 }

@@ -1,12 +1,14 @@
 import { useEffect, useReducer, useState } from "react";
 import Header from "../components/Header";
-import { useParams } from "react-router-dom";
-import ElementPeople from "../components/ElementPeople";
+import { Link, useParams,useNavigate } from "react-router-dom";
+import Element from "../components/Element";
 import { useShowData } from "../Hooks/useTikTokData";
+import OptionsButtons from "../components/OptionsButtons";
+import ArrowIcon from '../assets/arrow-icon.svg'
 
-export default function ViewPeople() {
+export default function View() {
+    const navigate = useNavigate()
     const [file, setFile] = useState('');
-    const [focus, setFocus] = useState(null);
     const [filterNet, setFilterNet] = useState('normal');
     const { id } = useParams();
     const [localPreference, setLocalPreference] = useState(JSON.parse(localStorage.getItem(id)) ||
@@ -26,7 +28,11 @@ export default function ViewPeople() {
     const [preference, dispatch] = useReducer(reducer, localPreference);
 
     useEffect(() => {
-        setFile(useShowData(id)[1]);
+        if(id=="Following List" || id=="Follower List") {
+            setFile(useShowData(id)[1]);
+        } else {
+            setFile(useShowData(id)[0]);
+        }
     }, [id]);
 
 
@@ -36,13 +42,13 @@ export default function ViewPeople() {
 
     function reducer(state, action) {
         switch (action.type) {
-            case ACTIONS.FAVORITE:{
+            case ACTIONS.FAVORITE: {
                 if (Array.isArray(state.favorite)) {
                     const isDuplicate = state.favorite.some(fav => fav.Link === action.payload.data.Link);
 
-                    if(Array.isArray(state.delete) && state.delete.length > 0) {
+                    if (Array.isArray(state.delete) && state.delete.length > 0) {
                         const hasOnDeleted = state.delete.some(del => del.Link === action.payload.data.Link);
-                        if(hasOnDeleted) {                            
+                        if (hasOnDeleted) {
                             if (isDuplicate) {
                                 return {
                                     ...state,
@@ -76,9 +82,9 @@ export default function ViewPeople() {
                 if (Array.isArray(state.delete)) {
                     const isDuplicate = state.delete.some(del => del.Link === action.payload.data.Link);
 
-                    if(Array.isArray(state.favorite) && state.favorite.length > 0) {
+                    if (Array.isArray(state.favorite) && state.favorite.length > 0) {
                         const hasOnFavorite = state.favorite.some(fav => fav.Link === action.payload.data.Link);
-                        if(hasOnFavorite) {                            
+                        if (hasOnFavorite) {
                             if (isDuplicate) {
                                 return {
                                     ...state,
@@ -98,7 +104,7 @@ export default function ViewPeople() {
                             ...state,
                             delete: state.delete?.filter(del => del.Link !== action.payload.data.Link)
                         };
-                        
+
                     } else {
                         return {
                             ...state,
@@ -109,62 +115,50 @@ export default function ViewPeople() {
                     console.log("state.delete não é um array");
                 }
             case ACTIONS.CLEAR:
-                return {favorite: [], delete: [], normal: []}
+                return { favorite: [], delete: [], normal: [] }
             default:
                 return "This action doesn't exist."
         }
     }
 
     return (
-        <div className="flex mx-32 gap-8 md:flex-row items-center justify-center flex-wrap">
+        <div className="flex flex-col mx-32 max-md:mx-8 gap-8 items-center justify-center flex-wrap">
             <Header />
+            <Link to={'..'}
+                onClick={(e) => {
+                    e.preventDefault();
+                    navigate(-1);
+                }} 
+                className="flex gap-4 w-full mt-20  hover:pl-1 transition-all">
+                <img className="w-8 rotate-90" src={ArrowIcon} alt="Icone de uma seta" />
+                <h1 className="text-5xl  max-sm:text-3xl">{id}</h1>
+            </Link>
 
-            <div className="w-full h-12 flex justify-evenly">
-                <h1 className="font-bold text-xl bg-blue-400 h-fit px-8 py-2 cursor-pointer" onClick={() => setFilterNet('normal')}>👀 All</h1>
-                <h1 className="font-bold text-xl bg-yellow-400 h-fit px-8 py-2  cursor-pointer" onClick={() => setFilterNet('favorite')}>⭐ Saved</h1>
-                <h1 className="font-bold text-xl bg-red-400 h-fit px-8 py-2  cursor-pointer" onClick={() => setFilterNet('delete')}>🗑 Deleted</h1>
-                <h1 className="font-bold text-xl bg-green-600 h-fit px-4 py-2  cursor-pointer" onClick={() => dispatch({type: ACTIONS.CLEAR})}>💾</h1>
-            </div>
+            <OptionsButtons setFilterNet={setFilterNet}></OptionsButtons>
 
-            <div className="flex flex-wrap transition-all duration-500 w-fit justify-center">
-
-            {
+            <div className="flex flex-wrap transition-all duration-500 gap-2 w-fit justify-center">
+                {
                     filterNet == 'favorite' ?
-                        preference.favorite.map((item, i) => {
-                            return (
-                                <div className="m-0 p-0" key={i} onClick={() => setFocus(i)}>
-                                        <ElementPeople dispatch={dispatch} link={"https://www.tiktok.com/@" + item.UserName} username={item.UserName}></ElementPeople>
-                                        </div>
-                            )
-                        })
-                        :
-                        filterNet == 'delete' ?
-                            preference.delete.map((item, i) => {
-
-                                return (
-                                    <div className="m-0 p-0" key={i} onClick={() => setFocus(i)}>
-                                        <ElementPeople dispatch={dispatch} link={"https://www.tiktok.com/@" + item.UserName} username={item.UserName}></ElementPeople>
-                                        </div>
-                                )
-                            })
-                            :
-                            filterNet === 'normal' && file.length>0 ?
-                                file.map((item, i) => {
-                 
-                                    return (
-                                        <div className="m-0 p-0" key={i} onClick={() => setFocus(i)}>
-                                        <ElementPeople dispatch={dispatch} link={"https://www.tiktok.com/@" + item.UserName} username={item.UserName}></ElementPeople>
-                                        </div>
-                                    )
-                                })
-                                :
-                                <></>
+                        renderElements(preference.favorite, dispatch, id)
+                    :
+                    filterNet == 'delete' ?
+                        renderElements(preference.delete, dispatch, id)
+                    :
+                    filterNet === 'normal' && file.length > 0&&
+                        renderElements(file, dispatch, id)
                 }
 
-                
-
             </div>
-
         </div>
     )
+}
+
+function renderElements(files, dispatch, id) {
+    return files.map((item, index) => {
+        return (
+            <div className="m-0 p-0" key={index}>
+                <Element type={id} dispatch={dispatch} item={item}></Element>
+            </div>
+        )
+    })
 }
