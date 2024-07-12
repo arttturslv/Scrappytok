@@ -5,6 +5,12 @@ export function useShowData(option) {
     return firstObjValue(dataByOption)
 } 
 
+export function useLocalFavorites(optt) {
+    var localFavs = useLocalStorageFile('ScrappyTok')[optt];
+    return localFavs;
+} 
+
+
 export function useLocalStorageFile(fileName) {
     const JSONFile = JSON.parse(localStorage.getItem(fileName));
         return JSONFile;

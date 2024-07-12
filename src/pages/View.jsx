@@ -2,16 +2,18 @@ import { useEffect, useReducer, useState } from "react";
 import Header from "../components/Header";
 import { Link, useParams,useNavigate } from "react-router-dom";
 import Element from "../components/Element";
-import { useShowData } from "../Hooks/useTikTokData";
+import { useShowData, useLocalFavorites } from "../Hooks/useTikTokData";
 import OptionsButtons from "../components/OptionsButtons";
 import ArrowIcon from '../assets/arrow-icon.svg'
 
 export default function View() {
     const navigate = useNavigate()
     const [file, setFile] = useState('');
+    const [lastInteraction, setLastInteraction] = useState(null)
     const [filterNet, setFilterNet] = useState('normal');
     const { id } = useParams();
-    const [localPreference, setLocalPreference] = useState(JSON.parse(localStorage.getItem(id)) ||
+
+    const [localPreference, setLocalPreference] = useState(useLocalFavorites(id) ||
     {
         favorite: [],
         delete: [],
@@ -30,6 +32,7 @@ export default function View() {
     useEffect(() => {
         if(id=="Following List" || id=="Follower List") {
             setFile(useShowData(id)[1]);
+            setLocalPreference(useLocalFavorites(id))
         } else {
             setFile(useShowData(id)[0]);
         }
@@ -39,7 +42,6 @@ export default function View() {
     useEffect(() => {
         var ScrappyTok = JSON.parse(localStorage.getItem("ScrappyTok"));
         ScrappyTok[id] = preference;
-        console.log(ScrappyTok)
         localStorage.setItem('ScrappyTok', JSON.stringify(ScrappyTok));
     }, [preference]);
 
@@ -125,7 +127,7 @@ export default function View() {
     }
 
     return (
-        <div className="flex flex-col mx-32 max-md:mx-8 gap-8 items-center justify-center flex-wrap">
+        <div className="w-full max-w-[1440px] mx-auto flex flex-col px-32 max-md:px-8 gap-8 items-center justify-center flex-wrap">
             <Header />
             <Link to={'..'}
                 onClick={(e) => {
@@ -142,13 +144,13 @@ export default function View() {
             <div className="flex flex-wrap transition-all duration-500 gap-2 w-fit justify-center">
                 {
                     filterNet == 'favorite' ?
-                        renderElements(preference.favorite, dispatch, id)
+                        renderElements(preference.favorite, dispatch, id, lastInteraction, setLastInteraction)
                     :
                     filterNet == 'delete' ?
-                        renderElements(preference.delete, dispatch, id)
+                        renderElements(preference.delete, dispatch, id, lastInteraction, setLastInteraction)
                     :
-                    filterNet === 'normal' && file.length > 0&&
-                        renderElements(file, dispatch, id)
+                    filterNet === 'normal' && file.length > 0 &&
+                        renderAll(file, dispatch, id, lastInteraction, setLastInteraction, preference)
                 }
 
             </div>
@@ -156,11 +158,36 @@ export default function View() {
     )
 }
 
-function renderElements(files, dispatch, id) {
+function renderElements(files, dispatch, id, lastInteraction, setLastInteraction) {
     return files.map((item, index) => {
         return (
-            <div className="m-0 p-0" key={index}>
-                <Element type={id} dispatch={dispatch} item={item}></Element>
+            <div onClick={()=> setLastInteraction(index)} className="m-0 p-0" key={index}>
+                <Element lastInteraction={{fn:lastInteraction, index: index}} type={id} dispatch={dispatch} item={item}></Element>
+            </div>
+        )
+    })
+}
+
+function renderAll(files, dispatch, id, lastInteraction, setLastInteraction, preference) {
+    var filtered = files;
+    if(!preference) {
+        filtered = filtered.filter((el) => {
+            return preference.favorite.some((fav) => {
+                return fav.Date != el.Date;
+            })
+        })
+
+        filtered = filtered.filter((el) => {
+            return preference.deleted.some((fav) => {
+                return fav.Date != el.Date;
+            })
+        })
+    }
+     
+    return filtered.map((item, index) => {
+        return (
+            <div onClick={()=> setLastInteraction(index)} className="m-0 p-0" key={index}>
+                <Element lastInteraction={{fn:lastInteraction, index: index}} type={id} dispatch={dispatch} item={item}></Element>
             </div>
         )
     })
