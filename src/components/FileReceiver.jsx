@@ -45,7 +45,7 @@ export default function FileReceiver({file, setFile}) {
           
           <div className='flex flex-col w-min items-center gap-1'>
             <div className=''>
-              <label htmlFor="avatar" className='cursor-pointer w-max flex-col flex items-center px-4 '>
+              <label htmlFor="avatar" className='cursor-pointer  w-48 flex-col flex items-center px-4 '>
                 {
                   !file?
                       <img className="md:w-[100%] w-[80%] "  src="../src/assets/file-question-icon.svg" alt="" />
