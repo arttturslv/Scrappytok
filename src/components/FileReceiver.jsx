@@ -48,11 +48,11 @@ export default function FileReceiver({file, setFile}) {
               <label htmlFor="avatar" className='cursor-pointer  w-48 h-56 flex-col flex items-center px-4 '>
                 {
                   !file?
-                      <img className="md:w-[100%] w-[80%] "  src="../src/assets/file-question-icon.svg" alt="" />
+                      <img className="md:w-48 w-48 "  src="../src/assets/file-question-icon.svg" alt="" />
                   :
                     <>
                       <p className="text-sm">{file.name}</p>
-                      <img className="w-[100%]" src="../src/assets/file-icon.svg" alt="" />
+                      <img className="w-48" src="../src/assets/file-icon.svg" alt="" />
                     </>
 
                 }

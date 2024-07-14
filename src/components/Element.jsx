@@ -1,3 +1,5 @@
+import { returnLink } from "../Hooks/useTikTokData";
+
 export default function Element({type, dispatch, item, lastInteraction}) {
 
     const ACTIONS = {
@@ -7,25 +9,18 @@ export default function Element({type, dispatch, item, lastInteraction}) {
         RESTORE: 'restore'
     }
 
-    var link=item.Link;
+    const link = returnLink(item, type);
     const isLastInteraction = lastInteraction.fn===lastInteraction.index;
 
-    if (type == 'Favorite Effects') {
-        console.log(item)
-        link = item.EffectLink || item.Link;
-    }
-
-    if (type == 'Follower%List' || type == 'Following List') {
-        link = "https://www.tiktok.com/@" + item.UserName;
-
+    if (type == 'Follower List' || type == 'Following List') {
         return (
-            <div className={isLastInteraction?'w-64 h-12 m-2 transition-all duration-100 cursor-pointer flex outline outline-8 rounded-md outline-[#942a8d] hover:bg-opacity-80 hover:scale-[105%]': 'w-64 h-12 m-2 transition-all duration-100 cursor-pointer flex outline outline-8 rounded-md outline-[#241623] hover:bg-opacity-80 hover:scale-[105%]'}  >
-                <div className="flex-grow flex gap-1 bg-slate-600">
-                    <div className="w-10 h-full bg-slate-700 "> </div>
-                    <div className="flex-grow flex bg-inherit items-center" onClick={() => window.open(link, 'blank')}>
-                        <h3 className="bg-inherit text-[#FAFFD8] text-xl">@{item.UserName?.substring(0, 16)}</h3>
+            <div className={isLastInteraction?'w-64 h-12 m-2 transition-all duration-100 cursor-pointer flex  outline outline-8 rounded-md outline-[#942a8d] hover:bg-opacity-80 hover:scale-[105%]': 'w-64 h-12 m-2 transition-all duration-100 cursor-pointer flex outline outline-8 rounded-md outline-[#241623] hover:bg-opacity-80 hover:scale-[105%]'}  >
+                <div className="flex-grow flex  bg-slate-600">
+                    <div className="w-8 h-full bg-slate-700 "> </div>
+                    <div className="flex-grow flex bg-inherit items-center px-2" onClick={() => window.open(link, 'blank')}>
+                        <h3 className="bg-inherit w-32 text-[#FAFFD8] text-xl text-ellipsis overflow-hidden">@{item.UserName}</h3>
                     </div>
-                    
+                    <p className="w-10 h-full bg-red-400 justify-center items-center flex" onClick={() => dispatch({ type: ACTIONS.DELETE, payload: { data: { "Date": item.Date, "Link": link } } })}>🔥</p>
                     <p className="w-10 h-full bg-yellow-200 justify-center items-center flex" onClick={() => dispatch({ type: ACTIONS.FAVORITE, payload: { data: { "UserName": item.UserName, "Link": link } } })}>⭐</p>
                 </div>
             </div>
